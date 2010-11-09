@@ -42,15 +42,13 @@ Dependencies
 How to install
 --------------
 
-To be used from other packages, RepositoryHandler should be installed:
+This version of RepositoryHandler should be installed using [pip](http://pip.openplans.org/), which
+will allow you to install it from source here at GitHub. 
 
-     > ./autogen.sh
-     > make
-     > sudo make install
+    pip install -e "git+git://github.com/Lewisham/repositoryhandler.git#egg=repositoryhandler"
 
-If root access is not possible, the "sudo" command will not be run,
-and the package will stay installed in the current directory. It can
-be used there by including it in the PKG\_CONFIG\_PATH environment variable.
+As this package is an unofficial fork, it will *not* be uploaded to [PyPi](http://pypi.python.org/pypi/) in the
+foreseeable future.
 
 Examples
 --------
