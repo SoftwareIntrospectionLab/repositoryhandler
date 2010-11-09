@@ -10,12 +10,6 @@ through a common interface.
 **This is a fork from the original in order to add patches**. Feature
 parity with the original code is *not guaranteed*.
 
-How to get RepositoryHandler
-----------------------------
-
-* `git clone http://git.libresoft.es/repositoryhandler`
-* `git clone git://git.libresoft.es/git/repositoryhandler`
-
 Supported repository types
 --------------------------
 
