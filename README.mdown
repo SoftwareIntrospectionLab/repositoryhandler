@@ -47,6 +47,13 @@ will allow you to install it from source here at GitHub.
 
     pip install -e "git+git://github.com/Lewisham/repositoryhandler.git#egg=repositoryhandler"
 
+If you don't have pip, you can download the source package using the big "Download" button in the top-right, then run
+
+    python setup.py install
+
+You'll probably want to use `sudo` for that, in order to put packages in Python's default place. If you know how to mess
+with your Python load paths, you can omit it.
+
 As this package is an unofficial fork, it will *not* be uploaded to [PyPi](http://pypi.python.org/pypi/) in the
 foreseeable future.
 
