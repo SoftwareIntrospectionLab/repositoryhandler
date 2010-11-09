@@ -13,25 +13,19 @@ parity with the original code is *not guaranteed*.
 Supported repository types
 --------------------------
 
-* CVS
-* SVN
-* GIT
-* BZR (Preliminary support)
+* `cvs`
+* Subversion (`svn`)
+* `git`
+* Bazaar (`bzr`) (Preliminary support)
 * Tarball
-
-Optional:
-
-* ARCH (not implemented yet)
-* DARCS (not implemented yet)
 
 Dependencies
 ------------
 
-* Python >= 2.4
-* CVS client
-* SVN client
-* WGET or curl
-* Autoconf (for installation)
+* Python >= 2.4 (this might change to Python 2.6... upgrade already :) )
+* cvs client
+* svn client
+* `wget` or `curl`
 
 How to install
 --------------
