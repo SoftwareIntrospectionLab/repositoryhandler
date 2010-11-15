@@ -339,7 +339,7 @@ class GitRepository (Repository):
         elif os.path.isdir (uri):
             cwd = uri
         else:
-            cwd = os.getcwd ()
+            cwd = self.__get_root_dir(uri)
 
         cmd = ['git', 'blame', '--root', '-l', '-t', '-f']
 
