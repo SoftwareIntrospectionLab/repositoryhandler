@@ -150,7 +150,13 @@ class GitRepository (Repository):
         else:
             directory = uri
 
+        if not git_dir.endswith((".git", ".git/")):
+            git_dir = git_dir + "/.git/"
+
+        os.putenv("GIT_DIR", git_dir)
+
         return directory or self.uri
+
 
     def checkout (self, module, rootdir, newdir = None, branch = None, rev = None):
         if newdir is not None:
