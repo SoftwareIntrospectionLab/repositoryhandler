@@ -150,10 +150,10 @@ class GitRepository (Repository):
         else:
             directory = uri
 
-        if not git_dir.endswith((".git", ".git/")):
-            git_dir = git_dir + "/.git/"
+#        if not git_dir.endswith((".git", ".git/")):
+#            git_dir = git_dir + "/.git/"
 
-        os.putenv("GIT_DIR", git_dir)
+#        os.putenv("GIT_DIR", git_dir)
 
         return directory or self.uri
 
@@ -345,7 +345,7 @@ class GitRepository (Repository):
         elif os.path.isdir (uri):
             cwd = uri
         else:
-            cwd = os.getcwd ()
+            cwd = self.__get_root_dir(uri)
 
         cmd = ['git', 'blame', '--root', '-l', '-t', '-f']
 
