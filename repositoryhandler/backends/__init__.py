@@ -98,7 +98,7 @@ class Repository:
         '''Convenient method to get the diff for a given revision'''
         raise NotImplementedError
 
-    def blame (self, uri, rev = None, files = None, mc = False):
+    def blame (self, uri, rev = None, files = None, **kargs):
         '''Return blame/annotate for files'''
         raise NotImplementedError
 
