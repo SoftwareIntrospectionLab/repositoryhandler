@@ -15,7 +15,7 @@ setup(
     license = "GPL",
     keywords = "cvs svn git source sourcecontrol scm",
     url = "https://github.com/Lewisham/repositoryhandler",
-    packages=['repositoryhandler', 'tests'],
+    packages=['repositoryhandler', 'repositoryhandler/backends', 'tests'],
     long_description=read('README.mdown'),
     classifiers=[
         "Development Status :: 3 - Alpha",
