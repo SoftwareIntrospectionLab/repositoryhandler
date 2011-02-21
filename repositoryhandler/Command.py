@@ -146,7 +146,7 @@ class Command:
                         read_set.remove (p.stdout)
 
                     if out_data_cb is None:
-                        out_data += out_chunk
+                        out_data += out_chunk.decode('utf-8')
                     else:
                         out_data_cb[0] (out_chunk, out_data_cb[1])
                     
@@ -158,7 +158,7 @@ class Command:
                         read_set.remove (p.stderr)
 
                     if err_data_cb is None:
-                        err_data += err_chunk
+                        err_data += err_chunk.decode('utf-8')
                     else:
                         err_data_cb[0] (err_chunk, err_data_cb[1])
                     
