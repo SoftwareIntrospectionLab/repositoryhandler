@@ -150,7 +150,13 @@ class GitRepository (Repository):
         else:
             directory = uri
 
+#        if not git_dir.endswith((".git", ".git/")):
+#            git_dir = git_dir + "/.git/"
+
+#        os.putenv("GIT_DIR", git_dir)
+
         return directory or self.uri
+
 
     def checkout (self, module, rootdir, newdir = None, branch = None, rev = None):
         if newdir is not None:
@@ -330,7 +336,7 @@ class GitRepository (Repository):
         command = Command (cmd, cwd, env = {'PAGER' : ''})
         self._run_command (command, DIFF)
 
-    def blame (self, uri, rev = None, files = None, mc = False):
+    def blame (self, uri, rev = None, files = None, **kargs):
         self._check_uri (uri)
 
         if os.path.isfile (uri):
@@ -343,8 +349,13 @@ class GitRepository (Repository):
 
         cmd = ['git', 'blame', '--root', '-l', '-t', '-f']
 
-        if mc:
+        if kargs.get('mc'):
             cmd.extend (['-M', '-C'])
+        
+        start = kargs.get('start')
+        end = kargs.get('end')
+        if start and end:
+            cmd.extend(['-L',"%d,%d"%(start, end)])
 
         if rev is not None:
             cmd.append (rev)
