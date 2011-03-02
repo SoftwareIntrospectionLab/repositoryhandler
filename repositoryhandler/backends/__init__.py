@@ -55,10 +55,11 @@ class RepositoryCommandRunningError (CommandRunningError):
 class Repository:
     '''Abstract class representing a file repository'''
 
-    def __init__ (self, uri, type):
+    def __init__ (self, uri, type, timeout=None):
         self.uri = uri
         self.type = type
         self.watchers = {}
+        self.timeout = timeout
 
     def get_uri (self):
         return self.uri
@@ -149,6 +150,15 @@ class Repository:
             cb (data, user_data)
 
     def _run_command (self, command, type, input = None):
+        """Run a command with the command runner.
+        
+        >>> from repositoryhandler.Command import Command, CommandTimeOut 
+        >>> cmd = Command(['sleep', '100'])
+        >>> repo = Repository(None, None, timeout=2)
+        >>> repo._run_command(cmd, None) #doctest: +IGNORE_EXCEPTION_DETAIL
+        Traceback (most recent call last):
+        CommandTimeOut
+        """
         def callback (data):
             self.__run_callbacks (type, data)
 
@@ -156,7 +166,7 @@ class Repository:
             print command.cmd
 
         try:
-            command.run (input, callback)
+            command.run (input, callback, timeout=self.timeout)
         except CommandError, e:
             raise RepositoryCommandError (e.cmd, e.returncode, e.error)
         except CommandRunningError, e:
