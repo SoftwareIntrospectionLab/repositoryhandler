@@ -231,7 +231,7 @@ class SVNRepository (Repository):
         command = Command (cmd, cwd, env = {'LC_ALL' : 'C'})
         self._run_command (command, CAT)
 
-    def log (self, uri, rev = None, files = None):
+    def log (self, uri, rev = None, files = None, branch = None):
         self._check_uri (uri)
 
         if os.path.isfile (uri):
