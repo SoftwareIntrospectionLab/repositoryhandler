@@ -244,7 +244,7 @@ class GitRepository (Repository):
         else:
             cwd = os.getcwd ()
 
-        cmd = ['git', 'log', '--topo-order', '--pretty=fuller', '--parents', '--name-status', '-M', '-C', '--no-merges']
+        cmd = ['git', 'log', '--topo-order', '--pretty=fuller', '--parents', '--name-status', '-M', '-C']
 
         # Git < 1.6.4 -> --decorate
         # Git = 1.6.4 -> broken
