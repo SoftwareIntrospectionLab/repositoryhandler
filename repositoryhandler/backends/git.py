@@ -233,6 +233,24 @@ class GitRepository (Repository):
         command = Command (cmd, cwd, env = {'PAGER' : ''})
         self._run_command (command, CAT)
         
+    def size (self, uri, rev = None):
+        self._check_uri (uri)
+
+        cmd = ['git', 'cat-file', '-s']
+
+        cwd = self.__get_root_dir (uri)
+        target = uri[len (cwd):].strip ("/")
+
+        if rev is not None:
+            target = "%s:%s" % (rev, target)
+        else:
+            target = "HEAD:%s" % (target)
+
+        cmd.append (target)
+        
+        command = Command (cmd, cwd, env = {'PAGER' : ''})
+        self._run_command (command, SIZE)
+        
     def log (self, uri, rev = None, files = None, branch = None):
         self._check_uri (uri)
 
@@ -244,7 +262,7 @@ class GitRepository (Repository):
         else:
             cwd = os.getcwd ()
 
-        cmd = ['git', 'log', '--topo-order', '--pretty=fuller', '--parents', '--name-status', '-M', '-C']
+        cmd = ['git', 'log', '--topo-order', '--pretty=fuller', '--parents', '--name-status', '-M', '-C', '--no-merges']
 
         # Git < 1.6.4 -> --decorate
         # Git = 1.6.4 -> broken

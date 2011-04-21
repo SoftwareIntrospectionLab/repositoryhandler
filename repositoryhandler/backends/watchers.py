@@ -1,4 +1,4 @@
-N_WATCHES = 7
+N_WATCHES = 8
 
 (
     CHECKOUT,
@@ -7,5 +7,6 @@ N_WATCHES = 7
     DIFF,
     BLAME,
     CAT,
-    LS
+    LS,
+    SIZE
 ) = range (N_WATCHES)
