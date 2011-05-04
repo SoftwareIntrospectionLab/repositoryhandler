@@ -292,7 +292,7 @@ class GitRepository (Repository):
             location = "origin"
             
             if branch is not None:
-                location = location + "/" + branch
+                location = branch
                 
             cmd.append (location)
         except CommandError:
