@@ -291,6 +291,10 @@ class GitRepository (Repository):
             
             location = "origin"
             
+            # Remember that for Git, if you want to reference a
+            # a remote branch, you'll need something like
+            # 'origin/branch'. This isn't added automatically so
+            # local branches can also be referenced.
             if branch is not None:
                 location = branch
                 
