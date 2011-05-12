@@ -119,6 +119,10 @@ class Repository:
         '''Return the last revision'''
         raise NotImplementedError 
 
+    def get_previous_commit (self, uri, rev, file_name):
+        '''Return the rev when the given file was previously edited. File_name may be different in the returned rev!'''
+        raise NotImplementedError
+
     def add_watch (self, type, callback, user_data = None):
         if type not in range (N_WATCHES):
             raise InvalidWatch ('Type %d is not a valid watch type' % (type))
