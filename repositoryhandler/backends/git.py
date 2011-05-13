@@ -441,6 +441,18 @@ class GitRepository (Repository):
         #Not supported by Git
         return []
 
+    def get_previous_commit (self, uri, rev, file_name):
+        self._check_uri (uri)
+        
+        cmd = ['git', 'log', '--follow', '-n 2', '--format=%H', rev, '--', file_name]
+        command = Command (cmd, uri, env = {'PAGER' : ''})
+        
+        try:
+            out = command.run_sync ()
+            return out.splitlines()[1].strip ('\n\t ')
+        except:
+            return None
+
     def get_last_revision (self, uri):
         self._check_uri (uri)
 
