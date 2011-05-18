@@ -2,13 +2,13 @@ import os
 from setuptools import setup
 
 # Utility function to read the README file.
-# Used for the long_description. 
+# Used for the long_description.
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 setup(
     name = "repositoryhandler",
-    version = "0.3.3",
+    version = "0.3.4",
     author = "Chris Lewis",
     author_email = "cflewis@soe.ucsc.edu",
     description = ("A Python library for accessing source control repositories"),

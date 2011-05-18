@@ -30,7 +30,7 @@ __all__ = [
         'RepositoryCommandError',
         'RepositoryCommandRunningError',
         'create_repository',
-        'register_backend', 
+        'register_backend',
         'create_repository_from_path'
 ]
 
@@ -42,7 +42,7 @@ class RepositoryInvalidWorkingCopy (Exception):
 
 class RepositoryInvalidBranch (Exception):
     '''Invalid Branch'''
-    
+
 class InvalidWatch (Exception):
     '''Invalid watch type'''
 
@@ -67,10 +67,10 @@ class Repository(object):
     def get_uri_for_path (self, path):
         '''Returns the repository URI corresponding to the given local path'''
         return self.uri
-        
+
     def get_type (self):
         return self.type
-        
+
     def checkout (self, uri, rootdir, newdir = None, branch = None, rev = None):
         '''Checkout uri to the given directory'''
         raise NotImplementedError
@@ -81,10 +81,6 @@ class Repository(object):
 
     def cat (self, uri, rev = None):
         '''Output the content of specified uri'''
-        raise NotImplementedError
-    
-    def size (self, uri, rev = None):
-        '''Output the size of specified uri'''
         raise NotImplementedError
 
     def log (self, uri, rev = None, files = None):
@@ -117,16 +113,12 @@ class Repository(object):
 
     def get_last_revision (self, uri):
         '''Return the last revision'''
-        raise NotImplementedError 
-
-    def get_previous_commit (self, uri, rev, file_name):
-        '''Return the rev when the given file was previously edited. File_name may be different in the returned rev!'''
         raise NotImplementedError
 
     def add_watch (self, type, callback, user_data = None):
         if type not in range (N_WATCHES):
             raise InvalidWatch ('Type %d is not a valid watch type' % (type))
-        
+
         if not self.watchers.has_key (type):
             self.watchers[type] = [(callback, user_data)]
         else:
@@ -137,7 +129,7 @@ class Repository(object):
     def remove_watch (self, type, watcher_id):
         if type not in range (N_WATCHES):
             raise InvalidWatch ('Type %d is not a valid watch type' % (type))
-        
+
         if not self.watchers.has_key (type):
             return
 
@@ -148,10 +140,14 @@ class Repository(object):
         except:
             raise
 
+    def copy(self):
+      """Return a new repository that is a copy of this one"""
+      return create_repository(self.get_type(), self.get_uri())
+
     def __run_callbacks (self, type, data):
         if not self.watchers.has_key (type):
             return
-    
+
         for cb, user_data in self.watchers[type]:
             if cb is None:
                 continue
@@ -159,8 +155,8 @@ class Repository(object):
 
     def _run_command (self, command, type, input = None):
         """Run a command with the command runner.
-        
-        >>> from repositoryhandler.Command import Command, CommandTimeOut 
+
+        >>> from repositoryhandler.Command import Command, CommandTimeOut
         >>> cmd = Command(['sleep', '100'])
         >>> repo = Repository(None, None, timeout=2)
         >>> repo._run_command(cmd, None) #doctest: +IGNORE_EXCEPTION_DETAIL
@@ -206,12 +202,12 @@ def create_repository_from_path (path):
     for repo_type in repo_types:
         try:
             backend = 'repositoryhandler.backends.%s' % repo_type
-            f = getattr (__import__ (backend, None, None, ['get_repository_from_path']), 
+            f = getattr (__import__ (backend, None, None, ['get_repository_from_path']),
                     'get_repository_from_path')
         except ImportError:
             continue
 
-        try:    
+        try:
             type, uri = f (path)
             rep = create_repository (type, uri)
             if rep is not None:
