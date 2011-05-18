@@ -45,7 +45,7 @@ class CommandRunningError (Exception):
 class CommandTimeOut (Exception):
     '''Timeout running command'''
 
-class Command:
+class Command(object):
 
     SELECT_TIMEOUT = 2
     

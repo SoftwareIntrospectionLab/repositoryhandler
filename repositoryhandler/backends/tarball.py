@@ -56,7 +56,7 @@ class FileExtractorError (Exception):
     def __init__ (self, msg):
         Exception.__init__ (self, msg)
 
-class FileExtractor:
+class FileExtractor(object):
 
     def __init__ (self, uri):
         self.uri = uri

@@ -52,7 +52,7 @@ class RepositoryCommandError (CommandError):
 class RepositoryCommandRunningError (CommandRunningError):
     '''Error running a command that is still running'''
 
-class Repository:
+class Repository(object):
     '''Abstract class representing a file repository'''
 
     def __init__ (self, uri, type, timeout=None):
