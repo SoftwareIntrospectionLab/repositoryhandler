@@ -444,7 +444,7 @@ class GitRepository (Repository):
     def get_previous_commit (self, uri, rev, file_name):
         self._check_uri (uri)
         
-        cmd = ['git', 'log', '--follow', '-n 2', '--format=%H', rev, '--', file_name]
+        cmd = ['git', 'log', '--follow', '--format=%H', rev, '--', file_name]
         command = Command (cmd, uri, env = {'PAGER' : ''})
         
         try:
