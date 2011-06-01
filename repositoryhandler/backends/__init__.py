@@ -144,7 +144,7 @@ class Repository(object):
       """Return a new repository that is a copy of this one"""
       return create_repository(self.get_type(), self.get_uri())
 
-    def __run_callbacks (self, type, data):
+    def _run_callbacks (self, type, data):
         if not self.watchers.has_key (type):
             return
 
@@ -164,7 +164,7 @@ class Repository(object):
         CommandTimeOut
         """
         def callback (data):
-            self.__run_callbacks (type, data)
+            self._run_callbacks (type, data)
 
         if DEBUG:
             print command.cmd
