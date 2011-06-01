@@ -233,7 +233,25 @@ class GitRepository (Repository):
         command = Command (cmd, cwd, env = {'PAGER' : ''})
         self._run_command (command, CAT)
         
-    def log (self, uri, rev = None, files = None):
+    def size (self, uri, rev = None):
+        self._check_uri (uri)
+
+        cmd = ['git', 'cat-file', '-s']
+
+        cwd = self.__get_root_dir (uri)
+        target = uri[len (cwd):].strip ("/")
+
+        if rev is not None:
+            target = "%s:%s" % (rev, target)
+        else:
+            target = "HEAD:%s" % (target)
+
+        cmd.append (target)
+        
+        command = Command (cmd, cwd, env = {'PAGER' : ''})
+        self._run_command (command, SIZE)
+        
+    def log (self, uri, rev = None, files = None, branch = None):
         self._check_uri (uri)
 
         if os.path.isfile (uri):
@@ -244,7 +262,7 @@ class GitRepository (Repository):
         else:
             cwd = os.getcwd ()
 
-        cmd = ['git', 'log', '--all', '--topo-order', '--pretty=fuller', '--parents', '--name-status', '-M', '-C']
+        cmd = ['git', 'log', '--topo-order', '--pretty=fuller', '--parents', '--name-status', '-M', '-C', '--no-merges']
 
         # Git < 1.6.4 -> --decorate
         # Git = 1.6.4 -> broken
@@ -254,16 +272,33 @@ class GitRepository (Repository):
         except ValueError:
             major, minor, micro, extra = self._get_git_version ()
 
-        if major <= 1 and minor < 6:
-            cmd.append ('--decorate')
-        elif major <= 1 and minor == 6 and micro <= 4:
-            cmd.append ('--decorate')
-        else:
-            cmd.append ('--decorate=full')
+        # Decorate adds branch specifications that we don't want the
+        # parser to see
+        if branch is None:
+            if major <= 1 and minor < 6:
+                cmd.append ('--decorate')
+            elif major <= 1 and minor == 6 and micro <= 4:
+                cmd.append ('--decorate')
+            else:
+                cmd.append ('--decorate=full')
+        
+        # --all overrides branch specifications
+        if branch is None:
+            cmd.append('--all')
 
         try:
             get_config (uri, 'remote.origin.url')
-            cmd.append ('origin')
+            
+            location = "origin"
+            
+            # Remember that for Git, if you want to reference a
+            # a remote branch, you'll need something like
+            # 'origin/branch'. This isn't added automatically so
+            # local branches can also be referenced.
+            if branch is not None:
+                location = branch
+                
+            cmd.append (location)
         except CommandError:
             pass
 
@@ -405,6 +440,18 @@ class GitRepository (Repository):
     def get_modules (self):
         #Not supported by Git
         return []
+
+    def get_previous_commit (self, uri, rev, file_name):
+        self._check_uri (uri)
+        
+        cmd = ['git', 'log', '--follow', '--format=%H', rev, '--', file_name]
+        command = Command (cmd, uri, env = {'PAGER' : ''})
+        
+        try:
+            out = command.run_sync ()
+            return out.splitlines()[1].strip ('\n\t ')
+        except:
+            return None
 
     def get_last_revision (self, uri):
         self._check_uri (uri)
