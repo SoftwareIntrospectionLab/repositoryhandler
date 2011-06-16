@@ -374,13 +374,9 @@ class GitRepository (Repository):
     def blame (self, uri, rev = None, files = None, **kargs):
         self._check_uri (uri)
 
-        if os.path.isfile (uri):
-            cwd = os.path.dirname (uri)
-            files = [os.path.basename (uri)]
-        elif os.path.isdir (uri):
-            cwd = uri
-        else:
-            cwd = self.__get_root_dir(uri)
+        cwd = self.__get_root_dir(uri)
+        if uri.startswith(cwd) and len(uri) > len(cwd):
+           files = [uri[len(cwd)+1:]]
 
         cmd = ['git', 'blame', '--root', '-l', '-t', '-f']
 
