@@ -171,6 +171,11 @@ class Command(object):
         ret = p.wait ()
         self.process = None
         
+        # Workaround to output the last line, if there is content on it
+        if out_data_cb is not None:
+            if out_data_cb[1][0] != "":
+                out_data_cb[0] ("\n", out_data_cb[1])
+        
         return out_data, err_data, ret
 
     def _run_with_callbacks (self, stdin = None, parser_out_func = None, parser_error_func = None, timeout = None):
