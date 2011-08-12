@@ -358,7 +358,7 @@ class GitRepository (Repository):
             cwd = os.getcwd ()
             target = None
 
-        cmd = ['git', 'show', '--pretty=format:', '-M', '-C']
+        cmd = ['git', 'show', '--pretty=format:']
 
         if rev is not None:
             cmd.append (rev)
