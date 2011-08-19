@@ -262,7 +262,7 @@ class GitRepository (Repository):
         else:
             cwd = os.getcwd ()
 
-        cmd = ['git', 'log', '--topo-order', '--pretty=fuller', '--parents', '--name-status', '-M', '-C']
+        cmd = ['git', 'log', '--topo-order', '--pretty=fuller', '--parents', '--name-status', '-M', '-C', '--cc']
 
         # Git < 1.6.4 -> --decorate
         # Git = 1.6.4 -> broken
@@ -358,7 +358,7 @@ class GitRepository (Repository):
             cwd = os.getcwd ()
             target = None
 
-        cmd = ['git', 'show', '-m', '--pretty=format:']
+        cmd = ['git', 'show', '--pretty=format:']
 
         if rev is not None:
             cmd.append (rev)
