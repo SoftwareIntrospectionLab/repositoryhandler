@@ -8,7 +8,7 @@ def read(fname):
 
 setup(
     name = "repositoryhandler",
-    version = "0.3.5",
+    version = "0.3.6",
     author = "Chris Lewis",
     author_email = "cflewis@soe.ucsc.edu",
     description = ("A Python library for accessing source control repositories"),
