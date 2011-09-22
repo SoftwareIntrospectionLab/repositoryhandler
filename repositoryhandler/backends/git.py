@@ -97,7 +97,7 @@ class GitRepository (Repository):
         out = command.run_sync ()
 
         version = out.replace ("git version ", "")
-        self.git_version = tuple ([int (i) for i in version.split ('.')])
+        self.git_version = tuple ([i for i in version.split ('.')])
 
         return self.git_version
 
