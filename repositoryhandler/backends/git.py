@@ -437,10 +437,13 @@ class GitRepository (Repository):
         #Not supported by Git
         return []
 
-    def get_previous_commit (self, uri, rev, file_name):
+    def get_previous_commit (self, uri, rev, file_name, follow=True):
         self._check_uri (uri)
         
-        cmd = ['git', 'log', '--follow', '--format=%H', rev, '--', file_name]
+        cmd = ['git', 'log', '--format=%H']
+        if follow:
+            cmd.append('--follow')
+        cmd.extend([rev, '--', file_name])
         command = Command (cmd, uri, env = {'PAGER' : ''})
         
         try:

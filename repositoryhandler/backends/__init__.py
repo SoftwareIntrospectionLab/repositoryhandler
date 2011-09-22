@@ -115,6 +115,10 @@ class Repository(object):
         '''Return the last revision'''
         raise NotImplementedError
 
+    def get_previous_commit (self, uri, rev, file_name, follow=True):
+        '''Return the previous revision of a file for a given commit'''
+        raise NotImplementedError
+
     def add_watch (self, type, callback, user_data = None):
         if type not in range (N_WATCHES):
             raise InvalidWatch ('Type %d is not a valid watch type' % (type))
