@@ -115,8 +115,9 @@ class Repository(object):
         '''Return the last revision'''
         raise NotImplementedError
 
-    def get_previous_commit (self, uri, rev, file_name, follow=True):
-        '''Return the previous revision of a file for a given commit'''
+    def get_previous_commit_and_file_name (self, uri, rev, file_name, follow=False):
+        '''Return a tupel of the previous revision and file_name
+           for a given file and revision'''
         raise NotImplementedError
 
     def add_watch (self, type, callback, user_data = None):

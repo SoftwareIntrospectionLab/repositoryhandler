@@ -437,19 +437,67 @@ class GitRepository (Repository):
         #Not supported by Git
         return []
 
-    def get_previous_commit (self, uri, rev, file_name, follow=True):
+    def __parse_git_log_output(self, log_output):
+        pattern_revision = re.compile("^([a-f|\d]{40})$")
+        pattern_revision_nul = re.compile("\0([a-f|\d]{40})$")
+        pattern_fileline = re.compile("^[\d|-]+\s+[\d|-]+\s+(.+)$")
+
+        revisions = []
+        file_names = []
+        for line in log_output.splitlines():
+            match_rev = pattern_revision.match(line)
+            if match_rev:
+                revisions.append(match_rev.group(1))
+
+            match_fileline = pattern_fileline.match(line)
+            if match_fileline:
+                file_line = match_fileline.group(1)
+
+                match_rev = pattern_revision_nul.search(file_line)
+                if match_rev:
+                    revisions.append(match_rev.group(1))
+
+                file_line_array = file_line.split('\0')
+                if len(file_line_array) > 3:
+                    file_names.append(file_line_array[2])
+                else:
+                    file_names.append(file_line_array[0])
+
+            if len(revisions) > 1 and len(file_names) > 1:
+                break
+
+        return (revisions, file_names)
+
+    def get_previous_commit_and_file_name(self, uri, rev, file_name, follow=False):
         self._check_uri (uri)
-        
-        cmd = ['git', 'log', '--format=%H']
+
+        cmd = ['git', 'log', '-z', '--format=%H', '--numstat']
         if follow:
             cmd.append('--follow')
         cmd.extend([rev, '--', file_name])
-        command = Command (cmd, uri, env = {'PAGER' : ''})
-        
+        command = Command(cmd, uri, env = {'PAGER' : ''})
+
         try:
-            out = command.run_sync ()
-            return out.splitlines()[1].strip ('\n\t ')
+            log_output = command.run_sync ()
         except:
+            return None
+
+        (revisions, file_names) = self.__parse_git_log_output(log_output)
+
+        revision = None
+        if len(revisions) > 1:
+            revision = revisions[1]
+
+        file_name = None
+        if len(file_names) > 1:
+            file_name = file_names[1]
+        elif len(file_names) == 1:
+            #if no second file_name exist (e.g. a merge), try the old one
+            file_name = file_names[0]
+
+        if revision and file_name:
+            return (revision, file_name)
+        else:
             return None
 
     def get_last_revision (self, uri):
