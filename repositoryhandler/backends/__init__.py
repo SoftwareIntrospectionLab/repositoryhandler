@@ -115,7 +115,7 @@ class Repository(object):
         '''Return the last revision'''
         raise NotImplementedError
 
-    def get_previous_commit_and_file_name (self, uri, rev, file_name, follow=False):
+    def get_previous_commit_and_file_name (self, uri, rev, file_name):
         '''Return a tupel of the previous revision and file_name
            for a given file and revision'''
         raise NotImplementedError
