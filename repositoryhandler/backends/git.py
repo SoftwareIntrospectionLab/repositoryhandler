@@ -437,66 +437,51 @@ class GitRepository (Repository):
         #Not supported by Git
         return []
 
-    def __parse_git_log_output(self, log_output):
-        pattern_revision = re.compile("^([a-f|\d]{40})$")
-        pattern_revision_nul = re.compile("\0([a-f|\d]{40})$")
-        pattern_fileline = re.compile("^[\d|-]+\s+[\d|-]+\s+(.+)$")
+    def get_previous_file_name(self, uri, rev, file_name):
+        self._check_uri(uri)
 
-        revisions = []
-        file_names = []
-        for line in log_output.splitlines():
-            match_rev = pattern_revision.match(line)
-            if match_rev:
-                revisions.append(match_rev.group(1))
-
-            match_fileline = pattern_fileline.match(line)
-            if match_fileline:
-                file_line = match_fileline.group(1)
-
-                match_rev = pattern_revision_nul.search(file_line)
-                if match_rev:
-                    revisions.append(match_rev.group(1))
-
-                file_line_array = file_line.split('\0')
-                if len(file_line_array) > 3:
-                    file_names.append(file_line_array[2])
-                else:
-                    file_names.append(file_line_array[0])
-
-            if len(revisions) > 1 and len(file_names) > 1:
-                break
-
-        return (revisions, file_names)
-
-    def get_previous_commit_and_file_name(self, uri, rev, file_name, follow=False):
-        self._check_uri (uri)
-
-        cmd = ['git', 'log', '-z', '--format=%H', '--numstat']
-        if follow:
-            cmd.append('--follow')
-        cmd.extend([rev, '--', file_name])
+        cmd = ['git', 'log', '--format=%H', '--name-status', '--find-copies', '-n1', rev]
         command = Command(cmd, uri, env = {'PAGER' : ''})
-
         try:
-            log_output = command.run_sync ()
+            output = command.run_sync()
         except:
             return None
 
-        (revisions, file_names) = self.__parse_git_log_output(log_output)
+        file_pattern = re.compile("^[ACDMRTUXB]{0,1}([MADT])[ \t]+(.*)$")
+        file_move_pattern = re.compile("^[ACDMRTUXB]{0,1}([RC])[0-9]+[ \t]+(.*)[ \t]+(.*)$")
 
-        revision = None
+        for line in output.splitlines():
+            old_file_name = new_file_name = None
+
+            match_file = file_pattern.match(line)
+            if match_file:
+                old_file_name = new_file_name = match_file.group(2)
+
+            match_file_move = file_move_pattern.match(line)
+            if match_file_move:
+                old_file_name = match_file_move.group(2)
+                new_file_name = match_file_move.group(3)
+
+            if new_file_name == file_name:
+                return old_file_name
+
+        return None
+
+    def get_previous_commit_and_file_name(self, uri, rev, file_name):
+        self._check_uri(uri)
+
+        prev_file_name = self.get_previous_file_name(uri, rev, file_name)
+
+        cmd = ['git', 'log', '--format=%H', rev, '--', prev_file_name]
+        command = Command(cmd, uri, env = {'PAGER' : ''})
+        try:
+            output = command.run_sync()
+        except:
+            return None
+
+        revisions = output.splitlines()
         if len(revisions) > 1:
-            revision = revisions[1]
-
-        file_name = None
-        if len(file_names) > 1:
-            file_name = file_names[1]
-        elif len(file_names) == 1:
-            #if no second file_name exist (e.g. a merge), try the old one
-            file_name = file_names[0]
-
-        if revision and file_name:
-            return (revision, file_name)
+            return (revisions[1], prev_file_name)
         else:
             return None
 
