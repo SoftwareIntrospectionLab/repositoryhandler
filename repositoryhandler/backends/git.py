@@ -345,7 +345,7 @@ class GitRepository (Repository):
         command = Command (cmd, cwd, env = {'PAGER' : ''})
         self._run_command (command, DIFF)
 
-    def show (self, uri, rev = None):
+    def show (self, uri, rev = None, **kargs):
         self._check_uri (uri)
 
         if os.path.isfile (uri):
@@ -359,6 +359,9 @@ class GitRepository (Repository):
             target = None
 
         cmd = ['git', 'show', '--find-copies', '--pretty=format:']
+
+        if kargs.get('ignore_whitespaces'):
+            cmd.extend (['--ignore-all-space'])
 
         if rev is not None:
             cmd.append (rev)
