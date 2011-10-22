@@ -385,7 +385,10 @@ class GitRepository (Repository):
 
         if kargs.get('mc'):
             cmd.extend (['-M', '-C'])
-        
+
+        if kargs.get('ignore_whitespaces'):
+            cmd.extend (['-w'])
+
         start = kargs.get('start')
         end = kargs.get('end')
         if start and end:
