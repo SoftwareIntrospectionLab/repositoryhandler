@@ -95,7 +95,7 @@ class Repository(object):
         '''Return diff for files in working copy betweeen revisions'''
         raise NotImplementedError
 
-    def show (self, uri, rev = None):
+    def show (self, uri, rev = None, **kargs):
         '''Convenient method to get the diff for a given revision'''
         raise NotImplementedError
 

@@ -302,7 +302,7 @@ class SVNRepository (Repository):
         command = Command (cmd, cwd, env = {'LC_ALL' : 'C'})
         self._run_command (command, DIFF)
 
-    def show (self, uri, rev = None):
+    def show (self, uri, rev = None, **kargs):
         self._check_uri (uri)
 
         if os.path.isfile (uri):
