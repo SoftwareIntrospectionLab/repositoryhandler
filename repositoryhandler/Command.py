@@ -140,7 +140,7 @@ class Command(object):
                         write_set.remove (p.stdin)
                 
                 if p.stdout in rlist:
-                    out_chunk = self._read (p.stdout.fileno (), 1024)
+                    out_chunk = p.stdout.readline()
                     if out_chunk == "":
                         p.stdout.close ()
                         read_set.remove (p.stdout)
