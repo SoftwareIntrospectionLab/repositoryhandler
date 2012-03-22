@@ -8,13 +8,13 @@ def read(fname):
 
 setup(
     name = "repositoryhandler",
-    version = "0.3.6.3",
+    version = "0.3.7",
     author = "Chris Lewis",
     author_email = "cflewis@soe.ucsc.edu",
     description = ("A Python library for accessing source control repositories"),
     license = "GPL",
     keywords = "cvs svn git source sourcecontrol scm",
-    url = "https://github.com/Lewisham/repositoryhandler",
+    url = "https://github.com/SoftwareIntrospectionLab/repositoryhandler",
     packages=['repositoryhandler', 'repositoryhandler/backends', 'tests'],
     long_description=read('README.mdown'),
     classifiers=[
